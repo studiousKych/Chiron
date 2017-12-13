@@ -83,7 +83,7 @@ class StagedMeal(CommonFoodInfo):
 class SetCourse(models.Model):
     staged_meal = models.ForeignKey(StagedMeal, on_delete=models.CASCADE)
     food_item = models.ForeignKey(FoodItem, on_delete=models.PROTECT)
-    servings = models.PositiveSmallIntegerField(null=True, blank=True)
+    servings = models.PositiveSmallIntegerField()
 
 if __name__ == '__main__':
     # print(get_recipe('57d41c954296c7332ee57e3f6bc6f99a'))
