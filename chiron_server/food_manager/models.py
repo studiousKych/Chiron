@@ -78,7 +78,12 @@ class StagedMeal(CommonFoodInfo):
     meal_type = models.CharField(max_length=9, choices=MEAL_TYPES)
     meal_time = models.TimeField(null=True, blank=True)
 
-    items = models.ManyToManyField(FoodItem)
+    items = models.ManyToManyField(FoodItem, through='SetCourse')
+
+class SetCourse(models.Model):
+    staged_meal = models.ForeignKey(StagedMeal, on_delete=models.CASCADE)
+    food_item = models.ForeignKey(FoodItem, on_delete=models.PROTECT)
+    servings = models.PositiveSmallIntegerField(null=True, blank=True)
 
 if __name__ == '__main__':
     # print(get_recipe('57d41c954296c7332ee57e3f6bc6f99a'))
