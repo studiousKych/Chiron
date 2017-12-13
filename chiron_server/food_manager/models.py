@@ -76,7 +76,7 @@ class StagedMeal(CommonFoodInfo):
 
     num = models.PositiveSmallIntegerField()
     meal_type = models.CharField(max_length=9, choices=MEAL_TYPES)
-    meal_time = models.DateTimeField()
+    meal_time = models.TimeField(null=True, blank=True)
 
     items = models.ManyToManyField(FoodItem)
 
