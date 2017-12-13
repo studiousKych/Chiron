@@ -41,6 +41,45 @@ def get_parsed_nutrition(post_content):
 
     return r
 
+
+class CommonFoodInfo(models.Model):
+    calories = models.DecimalField(max_digits=7, decimal_places=2, null=True)
+    fats = models.DecimalField(max_digits=7, decimal_places=2, null=True)
+    carbs = models.DecimalField(max_digits=7, decimal_places=2, null=True)
+    protein = models.DecimalField(max_digits=7, decimal_places=2, null=True)
+
+    class Meta:
+        abstract = True
+
+class FoodItem(CommonFoodInfo):
+    FOOD_TYPES = (
+        ('Snack', 'Snack'),
+        ('Drink', 'Drink'),
+        ('Entree', 'Entree'),
+        ('Side', 'Side'),
+        ('Dessert', 'Dessert')
+    )
+
+    name = models.CharField(max_length=100)
+    food_type = models.CharField(max_length=7, choices=FOOD_TYPES)
+    total_servings = models.PositiveSmallIntegerField()
+    uri = models.CharField(max_length=100, null=True, blank=True)
+    custom_recipe = models.TextField(null=True, blank=True)
+
+class StagedMeal(CommonFoodInfo):
+    MEAL_TYPES = (
+        ('Breakfast', "Breakfast"),
+        ('Lunch', 'Lunch'),
+        ('Dinner', 'Dinner'),
+        ('Snack', 'Snack')
+    )
+
+    num = models.PositiveSmallIntegerField()
+    meal_type = models.CharField(max_length=9, choices=MEAL_TYPES)
+    meal_time = models.DateTimeField()
+
+    items = models.ManyToManyField(FoodItem)
+
 if __name__ == '__main__':
     # print(get_recipe('57d41c954296c7332ee57e3f6bc6f99a'))
 
