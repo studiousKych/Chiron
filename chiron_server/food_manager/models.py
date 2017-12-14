@@ -2,6 +2,7 @@ import requests
 import json
 from django.db import models
 from django.contrib.auth.models import User
+from django.core.exceptions import ValidationError
 
 EDAMAM_RECIPE_APP_ID = "c8b0c0f5"
 EDAMAM_RECIPE_KEY = "05eb202b6be1ef6b5bb68bbaadb7de34"
@@ -64,27 +65,33 @@ class FoodItem(CommonFoodInfo):
     name = models.CharField(max_length=100)
     food_type = models.CharField(max_length=7, choices=FOOD_TYPES, default='Entree')
     uri = models.CharField(max_length=100, null=True, blank=True)
-    total_servings = models.PositiveSmallIntegerField(null=True, blank=True)
+    total_servings = models.PositiveSmallIntegerField(blank=True, default=1)
     custom_recipe = models.TextField(null=True, blank=True)
 
     def save(self, *args, **kwargs):
         if self.uri is not None:
             response = get_recipe(self.uri)
-
             response_dict = response.json()[0]
-            nutrient_dict = response_dict.get('totalNutrients')
-
             self.total_servings = response_dict.get('yield')
 
-            self.calories = response_dict.get('calories')
-            self.fats = nutrient_dict.get('FAT').get('quantity')
-            self.carbs = nutrient_dict.get('CHOCDF').get('quantity')
-            self.protein = nutrient_dict.get('PROCNT').get('quantity')
-
         elif self.custom_recipe is not None:
-            response = get_parsed_nutrition(self.custom_recipe)
+            post_dict = {
+                'ingr': self.custom_recipe.splitlines()
+            }
+
+            response = get_parsed_nutrition(post_dict)
+            response_dict = response.json()
+
         else:
             pass
+
+
+        nutrient_dict = response_dict.get('totalNutrients')
+
+        self.calories = response_dict.get('calories')
+        self.fats = nutrient_dict.get('FAT').get('quantity')
+        self.carbs = nutrient_dict.get('CHOCDF').get('quantity')
+        self.protein = nutrient_dict.get('PROCNT').get('quantity')
 
         super().save(*args, **kwargs)
 
@@ -110,7 +117,8 @@ class StagedMeal(CommonFoodInfo):
         return self.meal_type + ' - ' + str(self.num)
 
 
-class Diet(models.Model):
+class DietProfile(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
     name = models.CharField(max_length=100)
     suggested_calories = models.DecimalField(max_digits=7, decimal_places=2)
     suggested_fats = models.DecimalField(max_digits=7, decimal_places=2)
@@ -133,7 +141,7 @@ class MealPlan(models.Model):
         ("SUN", 'Sunday')
     )
 
-    diet = models.ForeignKey(Diet, on_delete=models.CASCADE)
+    diet_profile = models.ForeignKey(DietProfile, on_delete=models.CASCADE)
 
     day = models.CharField(
         max_length=3,
@@ -149,7 +157,7 @@ class MealPlan(models.Model):
     )
 
     def __str__(self):
-        return self.diet.name + ' - ' + self.day
+        return self.diet_profile.name + ' - ' + self.day
 
 
 class SetCourse(models.Model):
@@ -159,8 +167,9 @@ class SetCourse(models.Model):
     servings = models.PositiveSmallIntegerField()
 
     def __str__(self):
-        return self.meal_plan.__str__()
-
-class Profile(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
-    diet = models.OneToOneField(Diet, on_delete=models.PROTECT)
+        return "{}/{} - meal: {} - {}".format(
+            self.meal_plan.diet_profile.user,
+            self.meal_plan.day,
+            self.staged_meal.num,
+            self.food_item.name
+        )
