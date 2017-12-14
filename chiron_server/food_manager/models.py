@@ -46,10 +46,10 @@ def get_parsed_nutrition(post_content):
 
 
 class CommonFoodInfo(models.Model):
-    calories = models.DecimalField(max_digits=7, decimal_places=2, default=0)
-    fats = models.DecimalField(max_digits=7, decimal_places=2, default=0)
-    carbs = models.DecimalField(max_digits=7, decimal_places=2, default=0)
-    protein = models.DecimalField(max_digits=7, decimal_places=2, default=0)
+    calories = models.DecimalField(max_digits=7, decimal_places=2, default=0, editable=False)
+    fats = models.DecimalField(max_digits=7, decimal_places=2, default=0, editable=False)
+    carbs = models.DecimalField(max_digits=7, decimal_places=2, default=0, editable=False)
+    protein = models.DecimalField(max_digits=7, decimal_places=2, default=0, editable=False)
 
     class Meta:
         abstract = True
@@ -77,15 +77,21 @@ class FoodItem(CommonFoodInfo):
 
         elif self.custom_recipe is not None:
             post_dict = {
+                'title': self.name,
                 'ingr': self.custom_recipe.splitlines()
             }
+
+            print(post_dict)
 
             response = get_parsed_nutrition(post_dict)
             response_dict = response.json()
 
         else:
-            pass
+            return
 
+        if (response.json()).get('error'):
+            print(response.text)
+            return
 
         nutrient_dict = response_dict.get('totalNutrients')
 
@@ -99,32 +105,6 @@ class FoodItem(CommonFoodInfo):
     def __str__(self):
         return self.name
 
-
-class StagedMeal(CommonFoodInfo):
-    MEAL_TYPES = (
-        ('Breakfast', "Breakfast"),
-        ('Lunch', 'Lunch'),
-        ('Dinner', 'Dinner'),
-        ('Snack', 'Snack')
-    )
-
-    num = models.PositiveSmallIntegerField(unique=True)
-    meal_type = models.CharField(max_length=9, choices=MEAL_TYPES, default='Snack')
-    meal_time = models.TimeField(null=True, blank=True)
-
-    items = models.ManyToManyField(FoodItem, through='SetCourse')
-
-    def __str__(self):
-        return "{} - {}: calories: {} carbs: {} fats: {} protein: {}".format(
-            MealPlan.objects.filter(staged_meals=self).first(),
-            self.meal_type,
-            self.calories,
-            self.carbs,
-            self.fats,
-            self.protein
-        )
-
-
 class DietProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     name = models.CharField(max_length=100)
@@ -134,10 +114,17 @@ class DietProfile(models.Model):
     suggested_proteins = models.DecimalField(max_digits=7, decimal_places=2)
 
     def __str__(self):
-        return self.name
+        return self.user.email
 
 
-class MealPlan(models.Model):
+class StagedMeal(CommonFoodInfo):
+    MEAL_TYPES = (
+        ('Breakfast', "Breakfast"),
+        ('Lunch', 'Lunch'),
+        ('Dinner', 'Dinner'),
+        ('Snack', 'Snack')
+    )
+
     WEEKDAY_CHOICES = (
         ("DEF", 'Default'),
         ("MON", 'Monday'),
@@ -148,36 +135,43 @@ class MealPlan(models.Model):
         ("SAT", 'Saturday'),
         ("SUN", 'Sunday')
     )
-
     diet_profile = models.ForeignKey(DietProfile, on_delete=models.CASCADE)
 
     day = models.CharField(
         max_length=3,
         choices=WEEKDAY_CHOICES,
         default="DEF",
-        unique=True
     )
 
-    staged_meals = models.ManyToManyField(
-        StagedMeal,
-        through='SetCourse',
-        through_fields=('meal_plan', 'staged_meal')
-    )
+    num = models.PositiveSmallIntegerField(null=False)
+    meal_type = models.CharField(max_length=9, choices=MEAL_TYPES, default='Snack')
+    meal_time = models.TimeField(null=True, blank=True)
+
+    items = models.ManyToManyField(FoodItem, through='SetCourse')
+
 
     def __str__(self):
-        return self.diet_profile.user.email + ' - ' + self.day
+        return "{} - {} - ({}) {}: calories: {} carbs: {}g fats: {}g protein: {}g".format(
+            self.diet_profile,
+            self.day,
+            self.num,
+            self.meal_type,
+            self.calories,
+            self.carbs,
+            self.fats,
+            self.protein
+        )
 
 
 class SetCourse(models.Model):
-    meal_plan = models.ForeignKey(MealPlan, on_delete=models.CASCADE)
-    staged_meal = models.ForeignKey(StagedMeal, on_delete=models.PROTECT)
+    staged_meal = models.ForeignKey(StagedMeal, on_delete=models.CASCADE)
     food_item = models.ForeignKey(FoodItem, on_delete=models.PROTECT)
     servings = models.PositiveSmallIntegerField(default=1, blank=False)
 
     def __str__(self):
-        return "{}/{} - meal: {} - {}".format(
-            self.meal_plan.diet_profile.user,
-            self.meal_plan.day,
+        return "{} {} - meal: {} - {}".format(
+            self.staged_meal.diet_profile,
+            self.staged_meal.day,
             self.staged_meal.num,
             self.food_item.name
         )
