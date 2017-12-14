@@ -3,6 +3,7 @@ import json
 from django.db import models
 from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
+from django.dispatch import receiver
 
 EDAMAM_RECIPE_APP_ID = "c8b0c0f5"
 EDAMAM_RECIPE_KEY = "05eb202b6be1ef6b5bb68bbaadb7de34"
@@ -45,10 +46,10 @@ def get_parsed_nutrition(post_content):
 
 
 class CommonFoodInfo(models.Model):
-    calories = models.DecimalField(max_digits=7, decimal_places=2, null=True, blank=True)
-    fats = models.DecimalField(max_digits=7, decimal_places=2, null=True, blank=True)
-    carbs = models.DecimalField(max_digits=7, decimal_places=2, null=True, blank=True)
-    protein = models.DecimalField(max_digits=7, decimal_places=2, null=True, blank=True)
+    calories = models.DecimalField(max_digits=7, decimal_places=2, default=0)
+    fats = models.DecimalField(max_digits=7, decimal_places=2, default=0)
+    carbs = models.DecimalField(max_digits=7, decimal_places=2, default=0)
+    protein = models.DecimalField(max_digits=7, decimal_places=2, default=0)
 
     class Meta:
         abstract = True
@@ -114,7 +115,14 @@ class StagedMeal(CommonFoodInfo):
     items = models.ManyToManyField(FoodItem, through='SetCourse')
 
     def __str__(self):
-        return self.meal_type + ' - ' + str(self.num)
+        return "{} - {}: calories: {} carbs: {} fats: {} protein: {}".format(
+            MealPlan.objects.filter(staged_meals=self).first(),
+            self.meal_type,
+            self.calories,
+            self.carbs,
+            self.fats,
+            self.protein
+        )
 
 
 class DietProfile(models.Model):
@@ -157,14 +165,14 @@ class MealPlan(models.Model):
     )
 
     def __str__(self):
-        return self.diet_profile.name + ' - ' + self.day
+        return self.diet_profile.user.email + ' - ' + self.day
 
 
 class SetCourse(models.Model):
     meal_plan = models.ForeignKey(MealPlan, on_delete=models.CASCADE)
     staged_meal = models.ForeignKey(StagedMeal, on_delete=models.PROTECT)
     food_item = models.ForeignKey(FoodItem, on_delete=models.PROTECT)
-    servings = models.PositiveSmallIntegerField()
+    servings = models.PositiveSmallIntegerField(default=1, blank=False)
 
     def __str__(self):
         return "{}/{} - meal: {} - {}".format(
