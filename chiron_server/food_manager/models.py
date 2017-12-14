@@ -1,6 +1,7 @@
 import requests
 import json
 from django.db import models
+from django.contrib.auth.models import User
 
 EDAMAM_RECIPE_APP_ID = "c8b0c0f5"
 EDAMAM_RECIPE_KEY = "05eb202b6be1ef6b5bb68bbaadb7de34"
@@ -43,10 +44,10 @@ def get_parsed_nutrition(post_content):
 
 
 class CommonFoodInfo(models.Model):
-    calories = models.DecimalField(max_digits=7, decimal_places=2, null=True)
-    fats = models.DecimalField(max_digits=7, decimal_places=2, null=True)
-    carbs = models.DecimalField(max_digits=7, decimal_places=2, null=True)
-    protein = models.DecimalField(max_digits=7, decimal_places=2, null=True)
+    calories = models.DecimalField(max_digits=7, decimal_places=2, null=True, blank=True)
+    fats = models.DecimalField(max_digits=7, decimal_places=2, null=True, blank=True)
+    carbs = models.DecimalField(max_digits=7, decimal_places=2, null=True, blank=True)
+    protein = models.DecimalField(max_digits=7, decimal_places=2, null=True, blank=True)
 
     class Meta:
         abstract = True
@@ -61,10 +62,35 @@ class FoodItem(CommonFoodInfo):
     )
 
     name = models.CharField(max_length=100)
-    food_type = models.CharField(max_length=7, choices=FOOD_TYPES)
-    total_servings = models.PositiveSmallIntegerField()
+    food_type = models.CharField(max_length=7, choices=FOOD_TYPES, default='Entree')
     uri = models.CharField(max_length=100, null=True, blank=True)
+    total_servings = models.PositiveSmallIntegerField(null=True, blank=True)
     custom_recipe = models.TextField(null=True, blank=True)
+
+    def save(self, *args, **kwargs):
+        if self.uri is not None:
+            response = get_recipe(self.uri)
+
+            response_dict = response.json()[0]
+            nutrient_dict = response_dict.get('totalNutrients')
+
+            self.total_servings = response_dict.get('yield')
+
+            self.calories = response_dict.get('calories')
+            self.fats = nutrient_dict.get('FAT').get('quantity')
+            self.carbs = nutrient_dict.get('CHOCDF').get('quantity')
+            self.protein = nutrient_dict.get('PROCNT').get('quantity')
+
+        elif self.custom_recipe is not None:
+            response = get_parsed_nutrition(self.custom_recipe)
+        else:
+            pass
+
+        super().save(*args, **kwargs)
+
+    def __str__(self):
+        return self.name
+
 
 class StagedMeal(CommonFoodInfo):
     MEAL_TYPES = (
@@ -74,30 +100,67 @@ class StagedMeal(CommonFoodInfo):
         ('Snack', 'Snack')
     )
 
-    num = models.PositiveSmallIntegerField()
-    meal_type = models.CharField(max_length=9, choices=MEAL_TYPES)
+    num = models.PositiveSmallIntegerField(unique=True)
+    meal_type = models.CharField(max_length=9, choices=MEAL_TYPES, default='Snack')
     meal_time = models.TimeField(null=True, blank=True)
 
     items = models.ManyToManyField(FoodItem, through='SetCourse')
 
+    def __str__(self):
+        return self.meal_type + ' - ' + str(self.num)
+
+
+class Diet(models.Model):
+    name = models.CharField(max_length=100)
+    suggested_calories = models.DecimalField(max_digits=7, decimal_places=2)
+    suggested_fats = models.DecimalField(max_digits=7, decimal_places=2)
+    suggested_carbs = models.DecimalField(max_digits=7, decimal_places=2)
+    suggested_proteins = models.DecimalField(max_digits=7, decimal_places=2)
+
+    def __str__(self):
+        return self.name
+
+
+class MealPlan(models.Model):
+    WEEKDAY_CHOICES = (
+        ("DEF", 'Default'),
+        ("MON", 'Monday'),
+        ("TUE", 'Tuesday'),
+        ("WED", 'Wednesday'),
+        ("THU", 'Thursday'),
+        ("FRI", 'Friday'),
+        ("SAT", 'Saturday'),
+        ("SUN", 'Sunday')
+    )
+
+    diet = models.ForeignKey(Diet, on_delete=models.CASCADE)
+
+    day = models.CharField(
+        max_length=3,
+        choices=WEEKDAY_CHOICES,
+        default="DEF",
+        unique=True
+    )
+
+    staged_meals = models.ManyToManyField(
+        StagedMeal,
+        through='SetCourse',
+        through_fields=('meal_plan', 'staged_meal')
+    )
+
+    def __str__(self):
+        return self.diet.name + ' - ' + self.day
+
+
 class SetCourse(models.Model):
-    staged_meal = models.ForeignKey(StagedMeal, on_delete=models.CASCADE)
+    meal_plan = models.ForeignKey(MealPlan, on_delete=models.CASCADE)
+    staged_meal = models.ForeignKey(StagedMeal, on_delete=models.PROTECT)
     food_item = models.ForeignKey(FoodItem, on_delete=models.PROTECT)
     servings = models.PositiveSmallIntegerField()
 
-if __name__ == '__main__':
-    # print(get_recipe('57d41c954296c7332ee57e3f6bc6f99a'))
+    def __str__(self):
+        return self.meal_plan.__str__()
 
-    print(
-        get_parsed_nutrition(
-            {
-                "title": "Basic Bacon and Eggs",
-                "yield": 1,
-                "ingr": [
-                    "1 tablespoon olive oil",
-                    "2 eggs over easy",
-                    "2 strips bacon"
-                ]
-            }
-        ).json()
-    )
+class Profile(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    diet = models.OneToOneField(Diet, on_delete=models.PROTECT)
