@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">Chiron</string>
+
+    <string name="login_address_label">Address:</string>
+    <string name="login_address">http://192.168.0.5:8000</string>
+    <string name="login_username">Username</string>
+    <string name="login_button">Login</string>
 </resources>
