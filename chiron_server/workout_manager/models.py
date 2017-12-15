@@ -12,7 +12,7 @@ from django.dispatch import receiver
 
 class Set(models.Model):
 	LIFT_CHOICES = {
-		{"BENCH", 'Bench Press'),
+		("BENCH", 'Bench Press'),
 		("PRESS", 'Shoulder Press'),
 		("ROW", 'Bent Over Row'),
 		("PULL", 'Pull-up'),
@@ -22,19 +22,19 @@ class Set(models.Model):
 		("SQUAT", 'Back Squat'),
 		("RAISE", 'Calf Raises')
 	}
-	
-	LIFT_CHOICES = {
-		{"BENCH", ''),
-		("PRESS", ''),
-		("ROW", ''),
-		("PULL", ''),
-		("CURL", ''),
-		("EXTEN", ''),
-		("DEADS", ''),
-		("SQUAT", ''),
-		("RAISE", '')
-	}
-	
+
+	# LIFT_CHOICES = {
+	# 	("BENCH", ''),
+	# 	("PRESS", ''),
+	# 	("ROW", ''),
+	# 	("PULL", ''),
+	# 	("CURL", ''),
+	# 	("EXTEN", ''),
+	# 	("DEADS", ''),
+	# 	("SQUAT", ''),
+	# 	("RAISE", '')
+	# }
+
 	name = models.CharField(
 		max_length=5,
 		choices=LIFT_CHOICES,
@@ -43,14 +43,15 @@ class Set(models.Model):
 	load = models.IntegerField(default=0)
 	reps = models.IntegerField(default=0)
 	rest = models.IntegerField(default=0)
-	url = mdoels.CharField(
-		max_length=5,
-		choices=
+
+	url = models.CharField(
+		max_length=100
 	)
-	order = models.IntegerField(default=0)
-	
+
+order = models.IntegerField(default=0)
+
 class Workout(models.Model):
-	WEEKDAY_CHOICES = (
+	WEEKDAY_CHOICES = {
         ("DEF", 'Default'),
         ("ONE", '1'),
         ("TWO", '2'),
@@ -59,39 +60,40 @@ class Workout(models.Model):
         ("FIV", '5'),
         ("SIX", '6'),
         ("SEV", '7')
-    )
+    }
 
-    day = models.CharField(
+	day = models.CharField(
         max_length=3,
         choices=WEEKDAY_CHOICES,
-        default="DEF",
-    )
-	
+    	default="DEF"
+	)
+
 	workout_name = models.CharField(max_length=40)
-	
+
 	sets = models.ManyToManyField(Set)
-	
-	def __str__*self):
+
+	def __str__(self):
 		return "{} - {}".format(
 			self.day,
 			self.workout_name,
 		)
-	
+
 class WorkoutProfile(models.Model):
 	user = models.ForeignKey(
         'auth.User',
-        related_name='dietprofiles',
+        related_name='workoutprofiles',
         on_delete=models.CASCADE
     )
-    name = models.CharField(max_length=100)
-	type = models.CharField(max_length=7, default="workout");
+
+	name = models.CharField(max_length=100)
+	data_type = models.CharField(max_length=7, default="workout");
 	workout = models.ManyToManyField(Workout)
-	
+
 	def __str__(self):
 		return self.user.email
 
-# Is this for edamam?		
-@receiver(post_save, sender=User)
-def create_auth_token(sender, instance=None, created=False, **kwargs):
-    if created:
-        Token.objects.create(user=instance)
+# # Is this for edamam?
+# @receiver(post_save, sender=User)
+# def create_auth_token(sender, instance=None, created=False, **kwargs):
+#     if created:
+#         Token.objects.create(user=instance)

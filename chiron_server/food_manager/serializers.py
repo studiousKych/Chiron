@@ -8,5 +8,5 @@ class DietProfileSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = DietProfile
-        fields = ('name', 'staged_meals')
+        fields = ('name', 'data_type', 'staged_meals')
         depth=3
