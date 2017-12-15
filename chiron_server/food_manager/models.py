@@ -103,21 +103,21 @@ class FoodItem(CommonFoodInfo):
         super().save(*args, **kwargs)
 
     def __str__(self):
-        return self.name
+        return "{} - calories:{}".format(self.name, self.calories)
 
-class DietProfile(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
-    name = models.CharField(max_length=100)
-    suggested_calories = models.DecimalField(max_digits=7, decimal_places=2)
-    suggested_fats = models.DecimalField(max_digits=7, decimal_places=2)
-    suggested_carbs = models.DecimalField(max_digits=7, decimal_places=2)
-    suggested_proteins = models.DecimalField(max_digits=7, decimal_places=2)
+
+class SetCourse(models.Model):
+    food_item = models.ForeignKey(FoodItem, on_delete=models.PROTECT)
+    servings = models.PositiveSmallIntegerField(default=1, blank=False)
 
     def __str__(self):
-        return self.user.email
+        return "{}: calories: {}".format(
+            self.food_item.name,
+            self.food_item.calories / self.servings
+        )
 
 
-class StagedMeal(CommonFoodInfo):
+class StagedMeal(models.Model):
     MEAL_TYPES = (
         ('Breakfast', "Breakfast"),
         ('Lunch', 'Lunch'),
@@ -135,7 +135,6 @@ class StagedMeal(CommonFoodInfo):
         ("SAT", 'Saturday'),
         ("SUN", 'Sunday')
     )
-    diet_profile = models.ForeignKey(DietProfile, on_delete=models.CASCADE)
 
     day = models.CharField(
         max_length=3,
@@ -147,31 +146,29 @@ class StagedMeal(CommonFoodInfo):
     meal_type = models.CharField(max_length=9, choices=MEAL_TYPES, default='Snack')
     meal_time = models.TimeField(null=True, blank=True)
 
-    items = models.ManyToManyField(FoodItem, through='SetCourse')
+    items = models.ManyToManyField(SetCourse)
 
 
     def __str__(self):
-        return "{} - {} - ({}) {}: calories: {} carbs: {}g fats: {}g protein: {}g".format(
-            self.diet_profile,
+        return "{} - ({}) {}".format(
             self.day,
             self.num,
             self.meal_type,
-            self.calories,
-            self.carbs,
-            self.fats,
-            self.protein
         )
 
+class DietProfile(models.Model):
+    user = models.ForeignKey(
+        'auth.User',
+        related_name='dietprofiles',
+        on_delete=models.CASCADE
+    )
+    name = models.CharField(max_length=100)
+    suggested_calories = models.DecimalField(max_digits=7, decimal_places=2)
+    suggested_fats = models.DecimalField(max_digits=7, decimal_places=2)
+    suggested_carbs = models.DecimalField(max_digits=7, decimal_places=2)
+    suggested_proteins = models.DecimalField(max_digits=7, decimal_places=2)
 
-class SetCourse(models.Model):
-    staged_meal = models.ForeignKey(StagedMeal, on_delete=models.CASCADE)
-    food_item = models.ForeignKey(FoodItem, on_delete=models.PROTECT)
-    servings = models.PositiveSmallIntegerField(default=1, blank=False)
+    staged_meals = models.ManyToManyField(StagedMeal)
 
     def __str__(self):
-        return "{} {} - meal: {} - {}".format(
-            self.staged_meal.diet_profile,
-            self.staged_meal.day,
-            self.staged_meal.num,
-            self.food_item.name
-        )
+        return self.user.email
