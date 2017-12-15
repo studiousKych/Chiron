@@ -18,15 +18,18 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Set;
 
 import chiron.taylor.chirag.chiron.models.Diet;
 import chiron.taylor.chirag.chiron.models.FoodItem;
 import chiron.taylor.chirag.chiron.models.MealItem;
 import chiron.taylor.chirag.chiron.models.Program;
+import chiron.taylor.chirag.chiron.models.ProgramHelper;
 import chiron.taylor.chirag.chiron.models.SetHelper;
 import chiron.taylor.chirag.chiron.models.SetModel;
 import chiron.taylor.chirag.chiron.models.StagedMeal;
 import chiron.taylor.chirag.chiron.models.Workout;
+import chiron.taylor.chirag.chiron.models.WorkoutHelper;
 
 
 public class MainActivity extends AppCompatActivity implements JSONObserver{
@@ -35,12 +38,13 @@ public class MainActivity extends AppCompatActivity implements JSONObserver{
 
     private Diet diet;
     private Program program;
+    private long pid;
+
 
     private SetHelper setHelper;
-    /*
     private WorkoutHelper workoutHelper;
     private ProgramHelper programHelper;
-
+    /*
     private foodItemHelper foodItemHelper;
     private MealItemHealper mealItemHelper;
     private StagedMealHelper stagedMealHelper;
@@ -52,29 +56,32 @@ public class MainActivity extends AppCompatActivity implements JSONObserver{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        programHelper = new ProgramHelper(this);
+        workoutHelper = new WorkoutHelper(this);
         setHelper = new SetHelper(this);
-        setHelper.deleteAllSets();
 
-        GetJSONTask task = new GetJSONTask();
-        task.setObserver(this);
-        task.execute(new String[] { DIET_URL });
-        task.execute(new String[] { WORK_URL });
+        //GetJSONTask task = new GetJSONTask();
+        //task.setObserver(this);
+        //task.execute(new String[] { DIET_URL });
+        //task.execute(new String[] { WORK_URL });
     }
 
     public void viewDiet(View view) {
-        //Intent intent = new Intent(this, DietActivity.class);
-        //startActivity(intent);
+        Intent intent = new Intent(this, DietActivity.class);
+
+        startActivity(intent);
     }
 
     public void viewWorkout(View view) {
         Intent intent = new Intent(this, WorkoutActivity.class);
+        intent.putExtra("pid", pid);
         startActivity(intent);
     }
 
     public void jsonDataReceived(JSONObject json){
         // TODO Checking if adding a type to DietProfile broke anything
         try {
-            String type = json.getString("type");
+            String type = json.getString("data_type");
 
             if (type == "diet") {
                 JSONArray stagedMealsArray = json.getJSONArray("staged_meals");
@@ -117,8 +124,6 @@ public class MainActivity extends AppCompatActivity implements JSONObserver{
                     stagedMeals.add(stagedMeal);
                 }
                 diet = new Diet(diet_name, stagedMeals);
-                // Test
-                saveDiet(diet);
             } else if (type == "workout") {
                 JSONArray workoutArray = json.getJSONArray("workout");
                 String program_name = json.getString("name");
@@ -143,14 +148,18 @@ public class MainActivity extends AppCompatActivity implements JSONObserver{
                     String day = workoutObject.getString("day");
                     String name = workoutObject.getString("name");
 
-                    Workout workout = new Workout(day, name, sets);
+                    Workout workout = new Workout(day, name);
                     workouts.add(workout);
                 }
-                program = new Program(program_name, workouts);
-
-                // Test
-                saveProgram(program);
-                // Populate Databse
+                // TODO stuff
+                pid = programHelper.createProgram(program);
+                program = new Program(pid,program_name);
+                for (Workout workout : program.getWorkout()) {
+                    long wid = workoutHelper.createWorkout(pid, workout);
+                    for (SetModel set : workout.getSets()) {
+                        setHelper.createSet(wid, set);
+                    }
+                }
 
             }
         } catch (JSONException e) {
@@ -158,29 +167,5 @@ public class MainActivity extends AppCompatActivity implements JSONObserver{
         }
     }
 
-    public void saveProgram(Program p) {
-        try
-        {
-            ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(new File("/sdcard/save_program.bin")));
-            oos.writeObject(p);
-            oos.flush();
-            oos.close();
-        } catch (Exception e) {
-            Log.wtf("Serialization Save Error: ",e.getMessage());
-            e.printStackTrace();
-        }
-    }
 
-    public void saveDiet(Diet d) {
-        try
-        {
-            ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(new File("/sdcard/save_diet.bin")));
-            oos.writeObject(d);
-            oos.flush();
-            oos.close();
-        } catch (Exception e) {
-            Log.wtf("Serialization Save Error: ",e.getMessage());
-            e.printStackTrace();
-        }
-    }
 }

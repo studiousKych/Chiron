@@ -9,6 +9,23 @@ import java.util.List;
 
 public class StagedMeal {
     private long id;
+
+    public String getDay() {
+        return day;
+    }
+
+    public int getMeal_num() {
+        return meal_num;
+    }
+
+    public String getMeal_type() {
+        return meal_type;
+    }
+
+    public List<MealItem> getItems() {
+        return items;
+    }
+
     private String day;
     private int meal_num;
     private String meal_type;

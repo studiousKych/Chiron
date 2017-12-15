@@ -55,6 +55,8 @@ public class SetAdapter extends BaseAdapter implements View.OnClickListener {
         public Button setReps;
         public TextView setLoad;
         public Button finalize;
+        public Button increment;
+        public Button decrement;
     }
 
     public View getView(int position, View convertView, ViewGroup parent) {
@@ -69,6 +71,8 @@ public class SetAdapter extends BaseAdapter implements View.OnClickListener {
             holder.nameText = (TextView) vi.findViewById(R.id.setName);
             holder.infoText = (TextView) vi.findViewById(R.id.setInfo);
             holder.setReps  = (Button) vi.findViewById(R.id.setReps);
+            holder.increment = (Button) vi.findViewById(R.id.incrementLoad);
+            holder.decrement = (Button) vi.findViewById(R.id.decrementLoad);
             holder.setLoad  = (TextView) vi.findViewById(R.id.setLoad);
             holder.finalize = (Button) vi.findViewById(R.id.finalizeSet);
 
@@ -97,6 +101,9 @@ public class SetAdapter extends BaseAdapter implements View.OnClickListener {
 
             holder.setLoad.setText( Integer.toString(tempValues.getLoad()) );
             holder.setLoad.setTag(position);
+
+            holder.increment.setTag(position);
+            holder.decrement.setTag(position);
 
             holder.finalize.setTag(position);
 

@@ -1,8 +1,17 @@
 package chiron.taylor.chirag.chiron.models;
 
-import java.io.Serializable;
+import android.os.Parcel;
+import android.os.Parcelable;
 
-public class SetModel implements Serializable {
+public class SetModel {
+
+    public String getName() {
+        return Name;
+    }
+
+    public int getLoad() {
+        return Load;
+    }
 
     private String Name;
     private int Load;
@@ -23,34 +32,6 @@ public class SetModel implements Serializable {
         this.Rest = e;
         this.Url = u;
         this.Order = o;
-    }
-
-    // Set Methods
-    public void setName(String Name) {
-        this.Name = Name;
-    }
-
-    public void setLoad(int Load) {
-        this.Load = Load;
-    }
-
-    public void setReps(int Reps) {
-        this.Reps = Reps;
-    }
-
-    public void setRest(int Rest) { this.Rest = Rest; }
-
-    public void setUrl(String Url) { this.Url = Url; }
-
-    public void setOrder(int Order) { this.Order = Order; }
-
-    // Get Methods
-    public String getName() {
-        return this.Name;
-    }
-
-    public int getLoad() {
-        return this.Load;
     }
 
     public int getReps() {

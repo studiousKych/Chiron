@@ -1,4 +1,3 @@
-/*
 package chiron.taylor.chirag.chiron.models;
 
 import android.content.ContentValues;
@@ -6,22 +5,27 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.widget.ArrayAdapter;
 
 import java.util.ArrayList;
 
 public class ProgramHelper extends SQLiteOpenHelper {
+    Context context;
+
     static final int DATABASE_VERSION = 1;
 
     static final String TABLE = "program";
 
     static final String CREATE_STATEMENT = "CREATE TABLE program (" +
-            "   _id integer primary key autoincrement" +
-            "   name text not null," +
+            "   _id integer primary key autoincrement," +
+            "   name text not null" +
             "  )";
 
     static final String DROP_STATEMENT = "DROP TABLE program";
 
-    public ProgramHelper(Context context) { super(context, TABLE, null, DATABASE_VERSION); }
+    public ProgramHelper(Context context) {
+        super(context, TABLE, null, DATABASE_VERSION);
+    }
 
     @Override
     public void onCreate(SQLiteDatabase db) {
@@ -39,8 +43,11 @@ public class ProgramHelper extends SQLiteOpenHelper {
         db.execSQL(CREATE_STATEMENT);
     }
 
-    public long createProgram(String name) {
+    public long createProgram(Program p) {
         SQLiteDatabase db = this.getWritableDatabase();
+
+        String name = p.getName();
+        ArrayList<Workout> workouts = p.getWorkout();
 
         ContentValues newValues = new ContentValues();
         newValues.put("name", name);
@@ -55,7 +62,7 @@ public class ProgramHelper extends SQLiteOpenHelper {
 
         SQLiteDatabase db = this.getReadableDatabase();
         String[] columns = new String[] {"_id", "name"};
-        String where "_id = ?";
+        String where = "_id = ?";
         String[] whereArgs = new String[] { "" + id };
         Cursor cursor = db.query(TABLE, columns, where, whereArgs, "", "", "");
 
@@ -64,21 +71,18 @@ public class ProgramHelper extends SQLiteOpenHelper {
 
             String name = cursor.getString(1);
 
-            ArrayList<Workout> workouts = getWorkouts(id);
-
-            program = new Program(name, workouts);
+            program = new Program(id, name);
         }
 
         return program;
     }
 
-    public boolean deleteProgram(long id) {
+    public boolean deleteProgram(int id) {
         SQLiteDatabase db = this.getWritableDatabase();
 
-        int numRows = db.delete(TABLE, "Id = ?", new String[] { "" + id });
-        boolean deleteWorkouts = numRowsDeleteWorkouts(id);
+        int numRows = db.delete(TABLE, "id = ?", new String[] { "" + id });
 
-        return (numRows == 1) && deleteWorkouts;
+        return (numRows == 1);
     }
 
     public void deleteAllPrograms() {
@@ -87,4 +91,3 @@ public class ProgramHelper extends SQLiteOpenHelper {
         db.delete(TABLE, "", new String[] { });
     }
 }
-*/

@@ -17,13 +17,14 @@ public class SetHelper extends SQLiteOpenHelper{
 
     static final String CREATE_STATEMENT = "CREATE TABLE sets (" +
             "   _id integer primary key autoincrement," +
-            "   wid integer foreign key," +
             "   name text not null," +
             "   reps integer not null," +
             "   load integer not null," +
             "   rest integer not null," +
             "   url varchar(100) not null," +
-            "   order integer not null" +
+            "   order integer not null," +
+            "   wid intteger not null," +
+            "   FOREIGN KEY(wid) REFERENCES" +
             ")";
 
     static final String DROP_STATEMENT = "DROP TABLE sets";
@@ -45,7 +46,7 @@ public class SetHelper extends SQLiteOpenHelper{
     }
 
     // Create Set
-    public long createSet(int wid, SetModel setModel) {
+    public long createSet(long wid, SetModel setModel) {
 
         String name = setModel.getName();
         int reps = setModel.getReps();
@@ -69,7 +70,7 @@ public class SetHelper extends SQLiteOpenHelper{
         return id;
     }
 
-    public List<SetModel> getWorkoutsets(long wid) {
+    public List<SetModel> getSets(long wid) {
         List<SetModel> sets = new ArrayList<>();
 
         SQLiteDatabase db = this.getReadableDatabase();
@@ -81,7 +82,6 @@ public class SetHelper extends SQLiteOpenHelper{
         cursor.moveToFirst();
         do {
             if (!cursor.isAfterLast()) {
-                long id = cursor.getLong(0);
                 String name = cursor.getString(1);
                 int load = cursor.getInt(2);
                 int reps = cursor.getInt(3);
@@ -101,7 +101,7 @@ public class SetHelper extends SQLiteOpenHelper{
 
     }
 
-    public boolean deleteSets(long id) {
+    public boolean deleteSet(int id) {
         SQLiteDatabase db = this.getWritableDatabase();
 
         int numRows = db.delete(TABLE, "_id = ?", new String[] { "" + id });

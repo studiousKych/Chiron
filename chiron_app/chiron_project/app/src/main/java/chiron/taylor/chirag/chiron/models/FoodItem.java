@@ -9,6 +9,43 @@ public class FoodItem {
     private float calories;
     private float fats;
     private float carbs;
+
+    public String getName() {
+        return name;
+    }
+
+    public String getFood_type() {
+        return food_type;
+    }
+
+    public String getUri() {
+        return uri;
+    }
+
+    public String getCustom_recipe() {
+        return custom_recipe;
+    }
+
+    public float getCalories() {
+        return calories;
+    }
+
+    public float getFats() {
+        return fats;
+    }
+
+    public float getCarbs() {
+        return carbs;
+    }
+
+    public float getProtein() {
+        return protein;
+    }
+
+    public float getTotal_servings() {
+        return total_servings;
+    }
+
     private float protein;
     private float total_servings;
 

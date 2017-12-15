@@ -4,7 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="chiron.taylor.chirag.chiron.MainActivity">
+    tools:context="chiron.taylor.chirag.chiron.MainActivity"
+    android:background="@color/colorPrimary">
 
     <Button
         android:id="@+id/viewDietBtn"
@@ -16,6 +17,7 @@
         android:layout_margin="50dp"
         android:text="@string/viewDiet"
         android:onClick="viewDiet"
+        android:background="@drawable/square_button"
         />
 
     <Button
@@ -28,6 +30,18 @@
         android:layout_margin="50dp"
         android:text="@string/viewWorkout"
         android:onClick="viewWorkout"
+        android:background="@drawable/square_button"
         />
+
+    <TextView
+        android:id="@+id/dietToady"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/workout"
+        android:layout_margin="50dp"
+        android:background="@drawable/square_button"
+        android:text="@string/spoofDietSummary"
+        android:padding="20dp"
+        android:lineSpacingMultiplier="1.2"/>
 
 </android.support.constraint.ConstraintLayout>

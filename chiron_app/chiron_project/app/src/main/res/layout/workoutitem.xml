@@ -67,7 +67,8 @@
             android:textColor="@color/colorAlternateText"
             android:text="@string/decrement"
             android:background="@drawable/circle_button"
-            app:layout_constraintLeft_toRightOf="@id/setLoadLbl"/>
+            app:layout_constraintLeft_toRightOf="@id/setLoadLbl"
+            android:onClick="decrement"/>
         <TextView
             android:id="@+id/setLoad"
             android:layout_height="wrap_content"
@@ -83,7 +84,8 @@
             android:textColor="@color/colorAlternateText"
             android:text="@string/increment"
             android:background="@drawable/circle_button"
-            app:layout_constraintLeft_toRightOf="@id/setLoad"/>
+            app:layout_constraintLeft_toRightOf="@id/setLoad"
+            android:onClick="increment"/>
         <Button
             android:id="@+id/finalizeSet"
             android:layout_height="40dp"

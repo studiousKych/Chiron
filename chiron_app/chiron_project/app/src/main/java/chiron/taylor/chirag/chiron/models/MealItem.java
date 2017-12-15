@@ -14,4 +14,8 @@ public class MealItem {
         this.serving = serving;
         this.item = item;
     }
+
+    public int getServing() { return this.serving; }
+
+    public FoodItem getItem() {  return this.item; }
 }

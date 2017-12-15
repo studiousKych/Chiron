@@ -30,4 +30,6 @@
     <string name="viewUrl">Watch Video</string>
     <string name="viewDiet">Diet</string>
     <string name="viewWorkout">Workout</string>
+    <string name="title_activity_meal_view">MealViewActivity</string>
+    <string name="spoofDietSummary">Breakfast: Eggs, Bacon, Greek Yogurt\\nLunch: BLT Sandwich\\nDinner: Ground Beef, Soy Sauce Veggies</string>
 </resources>

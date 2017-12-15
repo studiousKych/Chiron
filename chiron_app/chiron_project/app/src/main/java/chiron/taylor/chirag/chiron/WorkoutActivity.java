@@ -7,9 +7,13 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
+
+import org.w3c.dom.Text;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -17,8 +21,11 @@ import java.io.ObjectInputStream;
 import java.util.ArrayList;
 
 import chiron.taylor.chirag.chiron.models.Program;
+import chiron.taylor.chirag.chiron.models.ProgramHelper;
+import chiron.taylor.chirag.chiron.models.SetHelper;
 import chiron.taylor.chirag.chiron.models.SetModel;
 import chiron.taylor.chirag.chiron.models.Workout;
+import chiron.taylor.chirag.chiron.models.WorkoutHelper;
 
 public class WorkoutActivity extends AppCompatActivity {
 
@@ -26,32 +33,49 @@ public class WorkoutActivity extends AppCompatActivity {
     SetAdapter adapter;
     public WorkoutActivity SetListView = null;
     public ArrayList<SetModel> SetListViewValuesArr = new ArrayList<>();
-    File f = new File("/sdcard/save_program.bin");
+
+    ProgramHelper programHelper;
+    WorkoutHelper workoutHelper;
+    SetHelper setHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_workout);
+
+        Intent intent = getIntent();
 
         SetListView = this;
+        programHelper = new ProgramHelper(this);
+        workoutHelper = new WorkoutHelper(this);
+        setHelper = new SetHelper(this);
 
-        setListData();
+        SetData();
 
         Resources res = getResources();
         list = (ListView)findViewById(R.id.setList);
 
         adapter = new SetAdapter(SetListView, SetListViewValuesArr, res);
         list.setAdapter( adapter );
-
     }
 
-    public void setListData() {
-
-        Program p = loadSerializedObject(f);
-        ArrayList<Workout> workouts = p.getWorkout();
-        Workout workout = workouts.get(0);
-        ArrayList<SetModel> sets = workout.getSets();
-
+    public void SetData() {
+        for (int i = 0; i<4; i++) {
+            SetModel set = new SetModel("Bench Press", 225, 10, 60, "https://youtu.be/tuwHzzPdaGc", i);
+            SetListViewValuesArr.add(set);
+        }
+        for (int i = 4; i<8; i++) {
+            SetModel set = new SetModel("Military Press", 225, 10, 60, "https://youtu.be/tuwHzzPdaGc", i);
+            SetListViewValuesArr.add(set);
+        }
+        for (int i = 8; i<11; i++) {
+            SetModel set = new SetModel("Bicep Curls", 225, 10, 60, "https://youtu.be/tuwHzzPdaGc", i);
+            SetListViewValuesArr.add(set);
+        }
+        for (int i = 11; i<14; i++) {
+            SetModel set = new SetModel("Tricep Extensions", 225, 10, 60, "https://youtu.be/tuwHzzPdaGc", i);
+            SetListViewValuesArr.add(set);
+        }
     }
 
     public void onItemClick(int mPosition) {
@@ -90,6 +114,22 @@ public class WorkoutActivity extends AppCompatActivity {
         else {
             ((Button) view).setText(Integer.toString(buttonVal-1));
         }
+    }
+
+    public void increment(View view) {
+        int position = ((int) view.getTag());
+        View parentView = (View) view.getParent();
+        TextView loadText = (TextView) parentView.findViewById(R.id.setLoad);
+        int loadVal = Integer.parseInt(loadText.getText().toString())-5;
+        loadText.setText(Integer.toString(loadVal));
+    }
+
+    public void decrement(View view) {
+        int position = ((int) view.getTag());
+        View parentView = (View) view.getParent();
+        TextView loadText = (TextView) parentView.findViewById(R.id.setLoad);
+        int loadVal = Integer.parseInt(loadText.getText().toString())-5;
+        loadText.setText(Integer.toString(loadVal));
     }
 
     public Program loadSerializedObject(File f) {
