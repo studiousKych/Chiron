@@ -1,0 +1,194 @@
+{
+    "name": "Chirag's diet",
+    "staged_meals": [
+        {
+            "id": 4,
+            "day": "DEF",
+            "meal_num": 3,
+            "meal_type": "Dinner",
+            "meal_time": null,
+            "items": [
+                {
+                    "id": 4,
+                    "servings": 1,
+                    "food_item": {
+                        "id": 5,
+                        "calories": "748.00",
+                        "fats": "67.02",
+                        "carbs": "0.44",
+                        "protein": "34.41",
+                        "name": "Ground Beef",
+                        "food_type": "Entree",
+                        "uri": null,
+                        "total_servings": 1,
+                        "custom_recipe": "200g ground beef\r\nsalt\r\npepper\r\n2 tbsp olive oil for frying"
+                    }
+                },
+                {
+                    "id": 5,
+                    "servings": 1,
+                    "food_item": {
+                        "id": 6,
+                        "calories": "707.00",
+                        "fats": "55.36",
+                        "carbs": "40.20",
+                        "protein": "15.57",
+                        "name": "Soy sauce veggies",
+                        "food_type": "Entree",
+                        "uri": null,
+                        "total_servings": 1,
+                        "custom_recipe": "400g mixed vegetables\r\n4 tbsp soy sauce\r\n4 tbsp olive oil for frying"
+                    }
+                }
+            ]
+        },
+        {
+            "id": 5,
+            "day": "DEF",
+            "meal_num": 2,
+            "meal_type": "Lunch",
+            "meal_time": null,
+            "items": [
+                {
+                    "id": 6,
+                    "servings": 1,
+                    "food_item": {
+                        "id": 7,
+                        "calories": "2892.34",
+                        "fats": "230.61",
+                        "carbs": "133.14",
+                        "protein": "71.07",
+                        "name": "BLT",
+                        "food_type": "Entree",
+                        "uri": "b89a392159b6b245cedf875ad89937b6",
+                        "total_servings": 4,
+                        "custom_recipe": ""
+                    }
+                }
+            ]
+        },
+        {
+            "id": 6,
+            "day": "DEF",
+            "meal_num": 1,
+            "meal_type": "Breakfast",
+            "meal_time": null,
+            "items": [
+                {
+                    "id": 7,
+                    "servings": 1,
+                    "food_item": {
+                        "id": 1,
+                        "calories": "426.00",
+                        "fats": "35.29",
+                        "carbs": "1.67",
+                        "protein": "23.52",
+                        "name": "Bacon and Eggs",
+                        "food_type": "Entree",
+                        "uri": null,
+                        "total_servings": 1,
+                        "custom_recipe": "2 strips bacon\r\n3 eggs"
+                    }
+                },
+                {
+                    "id": 8,
+                    "servings": 1,
+                    "food_item": {
+                        "id": 3,
+                        "calories": "87.00",
+                        "fats": "5.30",
+                        "carbs": "3.30",
+                        "protein": "7.30",
+                        "name": "Greek Yogurt",
+                        "food_type": "Entree",
+                        "uri": null,
+                        "total_servings": 1,
+                        "custom_recipe": "100g greek yogurt"
+                    }
+                }
+            ]
+        },
+        {
+            "id": 7,
+            "day": "WED",
+            "meal_num": 1,
+            "meal_type": "Breakfast",
+            "meal_time": null,
+            "items": [
+                {
+                    "id": 8,
+                    "servings": 1,
+                    "food_item": {
+                        "id": 3,
+                        "calories": "87.00",
+                        "fats": "5.30",
+                        "carbs": "3.30",
+                        "protein": "7.30",
+                        "name": "Greek Yogurt",
+                        "food_type": "Entree",
+                        "uri": null,
+                        "total_servings": 1,
+                        "custom_recipe": "100g greek yogurt"
+                    }
+                },
+                {
+                    "id": 9,
+                    "servings": 1,
+                    "food_item": {
+                        "id": 2,
+                        "calories": "170.00",
+                        "fats": "9.24",
+                        "carbs": "16.95",
+                        "protein": "6.66",
+                        "name": "Peanut Butter Toast",
+                        "food_type": "Entree",
+                        "uri": null,
+                        "total_servings": 1,
+                        "custom_recipe": "1 slice toast\r\n1 tbsp peanut butter"
+                    }
+                },
+                {
+                    "id": 10,
+                    "servings": 1,
+                    "food_item": {
+                        "id": 8,
+                        "calories": "323.00",
+                        "fats": "29.49",
+                        "carbs": "17.53",
+                        "protein": "4.08",
+                        "name": "Avocado",
+                        "food_type": "Entree",
+                        "uri": null,
+                        "total_servings": 1,
+                        "custom_recipe": "1 whole avocado\r\nsalt\r\npepper"
+                    }
+                }
+            ]
+        },
+        {
+            "id": 8,
+            "day": "WED",
+            "meal_num": 2,
+            "meal_type": "Dinner",
+            "meal_time": null,
+            "items": [
+                {
+                    "id": 11,
+                    "servings": 2,
+                    "food_item": {
+                        "id": 7,
+                        "calories": "2892.34",
+                        "fats": "230.61",
+                        "carbs": "133.14",
+                        "protein": "71.07",
+                        "name": "BLT",
+                        "food_type": "Entree",
+                        "uri": "b89a392159b6b245cedf875ad89937b6",
+                        "total_servings": 4,
+                        "custom_recipe": ""
+                    }
+                }
+            ]
+        }
+    ]
+}
