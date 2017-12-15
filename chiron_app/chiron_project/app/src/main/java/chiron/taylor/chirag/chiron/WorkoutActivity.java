@@ -120,7 +120,7 @@ public class WorkoutActivity extends AppCompatActivity {
         int position = ((int) view.getTag());
         View parentView = (View) view.getParent();
         TextView loadText = (TextView) parentView.findViewById(R.id.setLoad);
-        int loadVal = Integer.parseInt(loadText.getText().toString())-5;
+        int loadVal = Integer.parseInt(loadText.getText().toString())+5;
         loadText.setText(Integer.toString(loadVal));
     }
 
