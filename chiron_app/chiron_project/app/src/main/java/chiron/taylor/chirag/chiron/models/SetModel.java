@@ -1,8 +1,9 @@
 package chiron.taylor.chirag.chiron.models;
 
-public class SetModel {
+import java.io.Serializable;
 
-    private long id;
+public class SetModel implements Serializable {
+
     private String Name;
     private int Load;
     private int Reps;
@@ -25,8 +26,6 @@ public class SetModel {
     }
 
     // Set Methods
-    public void setId(long id) { this.id = id; }
-
     public void setName(String Name) {
         this.Name = Name;
     }
@@ -46,8 +45,6 @@ public class SetModel {
     public void setOrder(int Order) { this.Order = Order; }
 
     // Get Methods
-    public long getId() { return this.id; }
-
     public String getName() {
         return this.Name;
     }

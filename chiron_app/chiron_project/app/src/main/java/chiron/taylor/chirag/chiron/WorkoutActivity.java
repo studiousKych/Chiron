@@ -5,13 +5,20 @@ import android.content.res.Resources;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Toast;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.ObjectInputStream;
 import java.util.ArrayList;
 
+import chiron.taylor.chirag.chiron.models.Program;
 import chiron.taylor.chirag.chiron.models.SetModel;
+import chiron.taylor.chirag.chiron.models.Workout;
 
 public class WorkoutActivity extends AppCompatActivity {
 
@@ -19,6 +26,7 @@ public class WorkoutActivity extends AppCompatActivity {
     SetAdapter adapter;
     public WorkoutActivity SetListView = null;
     public ArrayList<SetModel> SetListViewValuesArr = new ArrayList<>();
+    File f = new File("/sdcard/save_program.bin");
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,13 +47,10 @@ public class WorkoutActivity extends AppCompatActivity {
 
     public void setListData() {
 
-        for (int i = 0; i < 7; i++) {
-
-            final SetModel set = new SetModel("Bench Press", 225, 10, 60, "https://youtu.be/tuwHzzPdaGc", i);
-
-            SetListViewValuesArr.add( set );
-
-        }
+        Program p = loadSerializedObject(f);
+        ArrayList<Workout> workouts = p.getWorkout();
+        Workout workout = workouts.get(0);
+        ArrayList<SetModel> sets = workout.getSets();
 
     }
 
@@ -85,7 +90,19 @@ public class WorkoutActivity extends AppCompatActivity {
         else {
             ((Button) view).setText(Integer.toString(buttonVal-1));
         }
+    }
 
+    public Program loadSerializedObject(File f) {
+        try
+        {
+            ObjectInputStream ois = new ObjectInputStream(new FileInputStream(f));
+            Program p = (Program) ois.readObject();
+            return p;
+        } catch (Exception e) {
+            Log.wtf("Serializtion Read Error: ",e.getMessage());
+            e.printStackTrace();
+        }
+        return null;
     }
 }
 

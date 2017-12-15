@@ -11,4 +11,8 @@ public class Program {
         this.workout = workout;
     }
 
+    public String getName() { return this.name; }
+
+    public ArrayList<Workout> getWorkout() { return this.workout; }
+
 }

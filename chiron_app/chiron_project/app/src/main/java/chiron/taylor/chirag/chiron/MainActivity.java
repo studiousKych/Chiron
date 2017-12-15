@@ -1,14 +1,21 @@
 package chiron.taylor.chirag.chiron;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.widget.ArrayAdapter;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 
@@ -16,6 +23,7 @@ import chiron.taylor.chirag.chiron.models.Diet;
 import chiron.taylor.chirag.chiron.models.FoodItem;
 import chiron.taylor.chirag.chiron.models.MealItem;
 import chiron.taylor.chirag.chiron.models.Program;
+import chiron.taylor.chirag.chiron.models.SetHelper;
 import chiron.taylor.chirag.chiron.models.SetModel;
 import chiron.taylor.chirag.chiron.models.StagedMeal;
 import chiron.taylor.chirag.chiron.models.Workout;
@@ -28,16 +36,40 @@ public class MainActivity extends AppCompatActivity implements JSONObserver{
     private Diet diet;
     private Program program;
 
+    private SetHelper setHelper;
+    /*
+    private WorkoutHelper workoutHelper;
+    private ProgramHelper programHelper;
+
+    private foodItemHelper foodItemHelper;
+    private MealItemHealper mealItemHelper;
+    private StagedMealHelper stagedMealHelper;
+    private DietHelper dietHelper;
+     */
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        setHelper = new SetHelper(this);
+        setHelper.deleteAllSets();
 
         GetJSONTask task = new GetJSONTask();
         task.setObserver(this);
         task.execute(new String[] { DIET_URL });
         task.execute(new String[] { WORK_URL });
 
+    }
+
+    public void viewDiet(View view) {
+        //Intent intent = new Intent(this, DietActivity.class);
+        //startActivity(intent);
+    }
+
+    public void viewWorkout(View view) {
+        Intent intent = new Intent(this, WorkoutActivity.class);
+        startActivity(intent);
     }
 
     public void jsonDataReceived(JSONObject json){
@@ -114,11 +146,38 @@ public class MainActivity extends AppCompatActivity implements JSONObserver{
                     workouts.add(workout);
                 }
                 program = new Program(program_name, workouts);
+
+                // Populate Databse
+
             }
         } catch (JSONException e) {
             Log.wtf("JSONException", e);
         }
     }
 
+    public void saveProgram(Program p) {
+        try
+        {
+            ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(new File("/sdcard/save_program.bin")));
+            oos.writeObject(p);
+            oos.flush();
+            oos.close();
+        } catch (Exception e) {
+            Log.wtf("Serialization Save Error: ",e.getMessage());
+            e.printStackTrace();
+        }
+    }
 
+    public void saveDiet(Diet d) {
+        try
+        {
+            ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(new File("/sdcard/save_diet.bin")));
+            oos.writeObject(d);
+            oos.flush();
+            oos.close();
+        } catch (Exception e) {
+            Log.wtf("Serialization Save Error: ",e.getMessage());
+            e.printStackTrace();
+        }
+    }
 }

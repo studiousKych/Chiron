@@ -28,4 +28,6 @@
     <string name="loadLbl">Load:</string>
     <string name="placeholder" />
     <string name="viewUrl">Watch Video</string>
+    <string name="viewDiet">Diet</string>
+    <string name="viewWorkout">Workout</string>
 </resources>

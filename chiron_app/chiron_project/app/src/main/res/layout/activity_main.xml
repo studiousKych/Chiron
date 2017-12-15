@@ -6,10 +6,28 @@
     android:layout_height="match_parent"
     tools:context="chiron.taylor.chirag.chiron.MainActivity">
 
-    <ListView
-        android:id="@+id/setList"
-        android:layout_width="match_parent"
+    <Button
+        android:id="@+id/viewDietBtn"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toTopOf="parent"></ListView>
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        android:layout_margin="50dp"
+        android:text="@string/viewDiet"
+        android:onClick="viewDiet"
+        />
+
+    <Button
+        android:id="@+id/workout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/viewDietBtn"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        android:layout_margin="50dp"
+        android:text="@string/viewWorkout"
+        android:onClick="viewWorkout"
+        />
 
 </android.support.constraint.ConstraintLayout>

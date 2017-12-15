@@ -13,4 +13,6 @@ public class Workout {
         this.name = name;
         this.sets = sets;
     }
+
+    public ArrayList<SetModel> getSets() { return this.sets; }
 }

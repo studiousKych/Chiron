@@ -16,13 +16,13 @@ public class SetHelper extends SQLiteOpenHelper{
     static final String TABLE = "sets";
 
     static final String CREATE_STATEMENT = "CREATE TABLE sets (" +
-            "   _id integer primary key autoincrement" +
-            "   wid integer foreign key" +
-            "   name text not null" +
-            "   reps integer not null" +
-            "   load integer not null" +
-            "   rest integer not null" +
-            "   url varchar(100) not null" +
+            "   _id integer primary key autoincrement," +
+            "   wid integer foreign key," +
+            "   name text not null," +
+            "   reps integer not null," +
+            "   load integer not null," +
+            "   rest integer not null," +
+            "   url varchar(100) not null," +
             "   order integer not null" +
             ")";
 
@@ -45,15 +45,14 @@ public class SetHelper extends SQLiteOpenHelper{
     }
 
     // Create Set
-    public SetModel createSet(int wid,
-                              String name,
-                              int reps,
-                              int load,
-                              int rest,
-                              String url,
-                              int order) {
+    public long createSet(int wid, SetModel setModel) {
 
-        SetModel set = new SetModel(name, reps, load, rest, url, order);
+        String name = setModel.getName();
+        int reps = setModel.getReps();
+        int load = setModel.getLoad();
+        int rest = setModel.getRest();
+        String url = setModel.getUrl();
+        int order = setModel.getOrder();
 
         SQLiteDatabase db = this.getWritableDatabase();
 
@@ -67,10 +66,7 @@ public class SetHelper extends SQLiteOpenHelper{
 
         long id = db.insert(TABLE, null, newValues);
 
-        set.setId(id);
-
-        return set;
-
+        return id;
     }
 
     public List<SetModel> getWorkoutsets(long wid) {
@@ -94,7 +90,6 @@ public class SetHelper extends SQLiteOpenHelper{
                 int order = cursor.getInt(6);
 
                 SetModel set = new SetModel(name, load, reps, rest, url, order);
-                set.setId(id);
 
                 sets.add(set);
             }
