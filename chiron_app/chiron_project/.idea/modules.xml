@@ -3,9 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
-      <module fileurl="file://C:\Users\100502392\Desktop\Chiron-master\chiron_app\chiron_project\app\app.iml" filepath="C:\Users\100502392\Desktop\Chiron-master\chiron_app\chiron_project\app\app.iml" />
       <module fileurl="file://$PROJECT_DIR$/chiron_project.iml" filepath="$PROJECT_DIR$/chiron_project.iml" />
-      <module fileurl="file://C:\Users\100502392\Desktop\Chiron-master\chiron_app\chiron_project\chiron_project.iml" filepath="C:\Users\100502392\Desktop\Chiron-master\chiron_app\chiron_project\chiron_project.iml" />
     </modules>
   </component>
 </project>
