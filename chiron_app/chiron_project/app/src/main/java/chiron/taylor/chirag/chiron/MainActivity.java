@@ -59,7 +59,6 @@ public class MainActivity extends AppCompatActivity implements JSONObserver{
         task.setObserver(this);
         task.execute(new String[] { DIET_URL });
         task.execute(new String[] { WORK_URL });
-
     }
 
     public void viewDiet(View view) {
@@ -118,6 +117,8 @@ public class MainActivity extends AppCompatActivity implements JSONObserver{
                     stagedMeals.add(stagedMeal);
                 }
                 diet = new Diet(diet_name, stagedMeals);
+                // Test
+                saveDiet(diet);
             } else if (type == "workout") {
                 JSONArray workoutArray = json.getJSONArray("workout");
                 String program_name = json.getString("name");
@@ -147,6 +148,8 @@ public class MainActivity extends AppCompatActivity implements JSONObserver{
                 }
                 program = new Program(program_name, workouts);
 
+                // Test
+                saveProgram(program);
                 // Populate Databse
 
             }
