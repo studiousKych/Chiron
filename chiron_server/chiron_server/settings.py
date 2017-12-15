@@ -41,6 +41,7 @@ ALLOWED_HOSTS = ['192.168.0.5', 'localhost', '127.0.0.1']
 
 INSTALLED_APPS = [
     'food_manager.apps.FoodManagerConfig',
+	'workout_manager.apps.WorkoutManagerConfig',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',

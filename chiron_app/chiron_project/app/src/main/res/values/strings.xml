@@ -19,4 +19,13 @@
     <string name="permission_rationale">"Contacts permissions are needed for providing email
         completions."
     </string>
+
+    <!-- Strings related to UI -->
+    <string name="DONE">X</string>
+    <string name="decrement">-</string>
+    <string name="increment">+</string>
+    <string name="repLbl">Reps:</string>
+    <string name="loadLbl">Load:</string>
+    <string name="placeholder" />
+    <string name="viewUrl">Watch Video</string>
 </resources>

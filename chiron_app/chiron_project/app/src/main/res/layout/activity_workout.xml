@@ -4,12 +4,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="chiron.taylor.chirag.chiron.MainActivity">
-
-    <ListView
-        android:id="@+id/setList"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:layout_constraintTop_toTopOf="parent"></ListView>
+    tools:context="chiron.taylor.chirag.chiron.WorkoutActivity">
 
 </android.support.constraint.ConstraintLayout>

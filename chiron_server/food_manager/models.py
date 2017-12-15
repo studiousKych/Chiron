@@ -169,7 +169,7 @@ class DietProfile(models.Model):
     suggested_fats = models.DecimalField(max_digits=7, decimal_places=2)
     suggested_carbs = models.DecimalField(max_digits=7, decimal_places=2)
     suggested_proteins = models.DecimalField(max_digits=7, decimal_places=2)
-
+	type = models.CharField(max_length=4, default="diet")
     staged_meals = models.ManyToManyField(StagedMeal)
 
     def __str__(self):
