@@ -1,10 +1,17 @@
 from django.shortcuts import render
-from rest_framework import generics
-from .serializers import StagedMealSerializer
-from .models import StagedMeal
+from rest_framework import generics, permissions
+from .serializers import DietProfileSerializer
+from .models import DietProfile
+from .permissions import IsUser
 
 
 # Create your views here.
-class CreateView(generics.ListAPIView):
-    queryset = StagedMeal.objects.all()
-    serializer_class = StagedMealSerializer
+class DietProfileView(generics.RetrieveAPIView):
+
+    serializer_class = DietProfileSerializer
+    permission_classes = (permissions.IsAuthenticated,)
+
+    def get_object(self):
+        user = self.request.user
+
+        return DietProfile.objects.get(user=user)
