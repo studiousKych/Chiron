@@ -86,11 +86,11 @@ class FoodItem(CommonFoodInfo):
             response = get_parsed_nutrition(post_dict)
             response_dict = response.json()
 
-        else:
-            return
+            if (response.json()).get('error'):
+                print(response.text)
+                return
 
-        if (response.json()).get('error'):
-            print(response.text)
+        else:
             return
 
         nutrient_dict = response_dict.get('totalNutrients')
@@ -103,7 +103,7 @@ class FoodItem(CommonFoodInfo):
         super().save(*args, **kwargs)
 
     def __str__(self):
-        return "{} - calories:{}".format(self.name, self.calories)
+        return "{} - calories: {}".format(self.name, self.calories/self.total_servings)
 
 
 class SetCourse(models.Model):
@@ -111,9 +111,9 @@ class SetCourse(models.Model):
     servings = models.PositiveSmallIntegerField(default=1, blank=False)
 
     def __str__(self):
-        return "{}: calories: {}".format(
+        return "{} - calories: {}".format(
             self.food_item.name,
-            self.food_item.calories / self.servings
+            (self.food_item.calories / self.food_item.total_servings) * self.servings
         )
 
 
@@ -142,7 +142,7 @@ class StagedMeal(models.Model):
         default="DEF",
     )
 
-    num = models.PositiveSmallIntegerField(null=False)
+    meal_num = models.PositiveSmallIntegerField(null=False)
     meal_type = models.CharField(max_length=9, choices=MEAL_TYPES, default='Snack')
     meal_time = models.TimeField(null=True, blank=True)
 
@@ -152,7 +152,7 @@ class StagedMeal(models.Model):
     def __str__(self):
         return "{} - ({}) {}".format(
             self.day,
-            self.num,
+            self.meal_num,
             self.meal_type,
         )
 
