@@ -5,4 +5,4 @@ class FoodManagerConfig(AppConfig):
     name = 'food_manager'
 
     def ready(self):
-        import food_manager.signals
+        import food_manager.permissions
