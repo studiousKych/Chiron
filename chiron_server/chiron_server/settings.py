@@ -22,6 +22,11 @@ REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework.authentication.BasicAuthentication',
         'rest_framework.authentication.TokenAuthentication',
+    ),
+    'DEFAULT_RENDERER_CLASSES': (
+        'rest_framework.renderers.JSONRenderer',
+        'rest_framework.renderers.BrowsableAPIRenderer',
+        'rest_framework_xml.renderers.XMLRenderer'
     )
 }
 
@@ -34,7 +39,7 @@ SECRET_KEY = '#ji3twi2l-7n_0#dc2@$)t03q495qsfez#)1ns%yan7$c%xois'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['192.168.0.5', 'localhost', '127.0.0.1']
+ALLOWED_HOSTS = ['YOUR IP HERE', '99.248.132.20', 'localhost', '127.0.0.1']
 
 
 # Application definition

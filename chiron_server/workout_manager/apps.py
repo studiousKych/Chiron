@@ -1,7 +1,7 @@
 from django.apps import AppConfig
 
 
-class WorkoutManageConfig(AppConfig):
+class WorkoutManagerConfig(AppConfig):
     name = 'workout_manager'
 
     def ready(self):
