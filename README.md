@@ -4,8 +4,13 @@
 - Navigate into `chiron_server` and run the following
     `pip install -r requirements.txt`
 
-- Modify the ALLOWED_HOSTS property in ```chiron_server/settings.py``` and
-    add your server's local ip address for on device testing.
+- Modify the `ALLOWED_HOSTS` property in ```chiron_server/settings.py``` and
+    replace the first string with your server's local ip address for on device testing.
+
+- from `chiron_server` run `python manage.py runserver 0:PORT` where
+    `PORT` is the port you wish to run on (optional). This will start the
+    server and it will accept requests from any IP that accesses it through it's
+    `ALLOWED_HOSTS` setting.
 
 - In the MainActivity of the android project change DIET_URL and WORKOUT_URL to
     point to your own server.
