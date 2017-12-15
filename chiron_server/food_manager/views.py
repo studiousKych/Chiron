@@ -8,10 +8,11 @@ from .permissions import IsUser
 # Create your views here.
 class DietProfileView(generics.RetrieveAPIView):
 
+    queryset = DietProfile.objects.first()
     serializer_class = DietProfileSerializer
-    permission_classes = (permissions.IsAuthenticated,)
+    # permission_classes = (permissions.IsAuthenticated,)
 
-    def get_object(self):
-        user = self.request.user
-
-        return DietProfile.objects.get(user=user)
+    # def get_object(self):
+    #     user = self.request.user
+    #
+    #     return DietProfile.objects.get(user=user)
