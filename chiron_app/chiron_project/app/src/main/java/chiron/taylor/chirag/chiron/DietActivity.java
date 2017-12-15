@@ -26,6 +26,7 @@ public class DietActivity extends AppCompatActivity {
     public ArrayList<StagedMeal> MealListViewValuesArr = new ArrayList<>();
     public ArrayList<String> values = new ArrayList<>();
     Context context;
+    TextView nextMeal;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -98,7 +99,7 @@ public class DietActivity extends AppCompatActivity {
                 "Protein: 30.82g\n" +
                 "Description: 2 strips bacon, 3 eggs, 100g Greek yogurt";
 
-        TextView nextMeal = (TextView)findViewById(R.id.nextMeal);
+        nextMeal = (TextView)findViewById(R.id.nextMeal);
         nextMeal.setText(spoofText);
 
     }
@@ -107,5 +108,18 @@ public class DietActivity extends AppCompatActivity {
         values.add("Breakfast: Bacon and Eggs, Greek Yogurt");
         values.add("Lunch: BLT");
         values.add("Dinner: Ground Beef, Soy Sauce Veggies");
+    }
+
+    public void doneSpoof(View view) {
+        String newSpoof= "Lunch\n" +
+                "BLT Sandwich\n" +
+                "Calories: 1446.17\n" +
+                "Fats: 130.31g\n" +
+                "Carbs: 133.07g\n" +
+                "Protein: 35.504\n";
+        values.remove(0);
+        nextMeal = (TextView)findViewById(R.id.nextMeal);
+        nextMeal.setText(newSpoof);
+        adapter.notifyDataSetChanged();
     }
 }

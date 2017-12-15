@@ -65,15 +65,15 @@ public class WorkoutActivity extends AppCompatActivity {
             SetListViewValuesArr.add(set);
         }
         for (int i = 4; i<8; i++) {
-            SetModel set = new SetModel("Military Press", 225, 10, 60, "https://youtu.be/tuwHzzPdaGc", i);
+            SetModel set = new SetModel("Military Press", 175, 10, 60, "https://youtu.be/j7ULT6dznNc", i);
             SetListViewValuesArr.add(set);
         }
         for (int i = 8; i<11; i++) {
-            SetModel set = new SetModel("Bicep Curls", 225, 10, 60, "https://youtu.be/tuwHzzPdaGc", i);
+            SetModel set = new SetModel("DB Bicep Curls", 60, 10, 60, "https://youtu.be/tuwHzzPdaGc", i);
             SetListViewValuesArr.add(set);
         }
         for (int i = 11; i<14; i++) {
-            SetModel set = new SetModel("Tricep Extensions", 225, 10, 60, "https://youtu.be/tuwHzzPdaGc", i);
+            SetModel set = new SetModel("Tricep Extensions", 70, 10, 60, "https://youtu.be/tuwHzzPdaGc", i);
             SetListViewValuesArr.add(set);
         }
     }

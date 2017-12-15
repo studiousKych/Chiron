@@ -31,5 +31,6 @@
     <string name="viewDiet">Diet</string>
     <string name="viewWorkout">Workout</string>
     <string name="title_activity_meal_view">MealViewActivity</string>
-    <string name="spoofDietSummary">Breakfast: Eggs, Bacon, Greek Yogurt\\nLunch: BLT Sandwich\\nDinner: Ground Beef, Soy Sauce Veggies</string>
+    <string name="spoofDietSummary">Meal Summary:\nBreakfast: Eggs, Bacon, Greek Yogurt\\nLunch: BLT Sandwich\\nDinner: Ground Beef, Soy Sauce Veggies</string>
+    <string name="spoofWorkoutSummary">Workout Today:\nBench Press 4x10\nMilitary Press 4x10\nDB Bicep Curl 3x10\nTricep Extension 3x10</string>
 </resources>

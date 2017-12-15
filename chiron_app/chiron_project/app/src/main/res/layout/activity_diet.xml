@@ -17,10 +17,19 @@
         android:lineSpacingMultiplier="1.5"
         android:background="@color/colorPrimary"/>
 
+    <Button
+        android:id="@+id/doneMeal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/DONE"
+        android:onClick="doneSpoof"
+        app:layout_constraintTop_toBottomOf="@id/nextMeal"
+        android:background="@drawable/square_button"/>
+
     <ListView
         android:id="@+id/dietList"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@id/nextMeal"></ListView>
+        app:layout_constraintTop_toBottomOf="@id/doneMeal"></ListView>
 
 </android.support.constraint.ConstraintLayout>
