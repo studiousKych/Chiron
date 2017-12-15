@@ -2,13 +2,14 @@ package chiron.taylor.chirag.chiron;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 
 import org.json.JSONObject;
 
 
 public class MainActivity extends AppCompatActivity implements JSONObserver{
-    private static String DIET_URL = "http://192.168.0.5:8000/diets/";
-    private static String WORK_URL = "http://192.168.0.5:8000/YOUR ROUTE";
+    private static String DIET_URL = "http://192.168.0.5:8000/diets/?format=json";
+    private static String WORK_URL = "http://192.168.0.5:8000/YOUR ROUTE/?format=json";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -22,6 +23,7 @@ public class MainActivity extends AppCompatActivity implements JSONObserver{
     }
 
     public void jsonDataReceived(JSONObject json){
+        Log.wtf("main", json.toString());
 
     }
 

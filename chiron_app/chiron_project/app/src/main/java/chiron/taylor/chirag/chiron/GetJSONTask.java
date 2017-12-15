@@ -3,6 +3,7 @@ package chiron.taylor.chirag.chiron;
 import android.os.AsyncTask;
 import android.util.Log;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
@@ -31,15 +32,20 @@ public class GetJSONTask extends AsyncTask<String, Void, JSONObject> {
             InputStream inputRaw = conn.getInputStream();
             BufferedReader input = new BufferedReader(new InputStreamReader(inputRaw));
 
-            String body;
+            String content = "";
+            String text;
 
-            while ((body = input.readLine()) != null)
-                body = body + "\n";
+            while ((text = input.readLine()) != null)
+                content = content + "\n" + text;
 
-            Log.wtf("ASync", body);
+            Log.wtf("ASync", content);
 
+            dictionary = new JSONObject(content);
 
         } catch (IOException e) {
+            e.printStackTrace();
+            dictionary = null;
+        } catch (JSONException e) {
             e.printStackTrace();
             dictionary = null;
         }
