@@ -15,6 +15,15 @@ public class SetModel {
 
     private String Name;
     private int Load;
+
+    public void setLoad(int load) {
+        Load = load;
+    }
+
+    public void setReps(int reps) {
+        Reps = reps;
+    }
+
     private int Reps;
     private int Rest;
     private String Url;

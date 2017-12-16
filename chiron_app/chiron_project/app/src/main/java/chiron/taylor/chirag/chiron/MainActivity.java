@@ -24,6 +24,7 @@ import chiron.taylor.chirag.chiron.models.Diet;
 import chiron.taylor.chirag.chiron.models.FoodItem;
 import chiron.taylor.chirag.chiron.models.MealItem;
 import chiron.taylor.chirag.chiron.models.Program;
+import chiron.taylor.chirag.chiron.models.ProgramActivity;
 import chiron.taylor.chirag.chiron.models.ProgramHelper;
 import chiron.taylor.chirag.chiron.models.SetHelper;
 import chiron.taylor.chirag.chiron.models.SetModel;
@@ -73,7 +74,10 @@ public class MainActivity extends AppCompatActivity implements JSONObserver{
     }
 
     public void viewWorkout(View view) {
-        Intent intent = new Intent(this, WorkoutActivity.class);
+        // pid = program.getId();
+        pid = workout_data_builder();
+
+        Intent intent = new Intent(this, ProgramActivity.class);
         intent.putExtra("pid", pid);
         startActivity(intent);
     }
@@ -149,12 +153,13 @@ public class MainActivity extends AppCompatActivity implements JSONObserver{
                     String name = workoutObject.getString("name");
 
                     Workout workout = new Workout(day, name);
+                    workout.setSets(sets);
                     workouts.add(workout);
                 }
                 // TODO stuff
                 pid = programHelper.createProgram(program);
                 program = new Program(pid,program_name);
-                for (Workout workout : program.getWorkout()) {
+                for (Workout workout : workouts ) {
                     long wid = workoutHelper.createWorkout(pid, workout);
                     for (SetModel set : workout.getSets()) {
                         setHelper.createSet(wid, set);
@@ -167,5 +172,47 @@ public class MainActivity extends AppCompatActivity implements JSONObserver{
         }
     }
 
+    /* Added temporarily to test database more easily */
+    public long workout_data_builder(){
+
+        Program prog = new Program(0, "Bodybuilding");
+
+        Workout uppers = new Workout("1", "Uppers");
+
+        ArrayList<SetModel> uppersSets = new ArrayList<>();
+        // Uppers
+        for (int i = 0; i<4; i++) {
+            SetModel set = new SetModel("Bench Press", 225, 10, 60, "https://youtu.be/tuwHzzPdaGc", i);
+            uppersSets.add(set);
+        }
+        for (int i = 4; i<8; i++) {
+            SetModel set = new SetModel("Military Press", 175, 10, 60, "https://youtu.be/j7ULT6dznNc", i);
+            uppersSets.add(set);
+        }
+        for (int i = 8; i<11; i++) {
+            SetModel set = new SetModel("DB Bicep Curls", 60, 10, 60, "https://youtu.be/tuwHzzPdaGc", i);
+            uppersSets.add(set);
+        }
+        for (int i = 11; i<14; i++) {
+            SetModel set = new SetModel("Tricep Extensions", 70, 10, 60, "https://youtu.be/tuwHzzPdaGc", i);
+            uppersSets.add(set);
+        }
+
+        uppers.setSets(uppersSets);
+        ArrayList<Workout> workouts = new ArrayList<>();
+        workouts.add(uppers);
+        prog.setWorkout(workouts);
+
+        long pid = programHelper.createProgram(prog);
+        Log.wtf("Program Returned", Long.toString(pid));
+        for (Workout w: workouts) {
+            long wid = workoutHelper.createWorkout(pid, w);
+            for (SetModel s : w.getSets()) {
+                setHelper.createSet(wid, s);
+            }
+        }
+
+        return pid;
+    }
 
 }

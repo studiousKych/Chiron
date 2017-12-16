@@ -12,8 +12,22 @@ public class Program {
         this.name = name;
     }
 
+    public long getId() { return this.id; }
+
     public String getName() { return this.name; }
 
     public ArrayList<Workout> getWorkout() { return this.workout; }
+
+    public void setId(long id) {
+        this.id = id;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setWorkout(ArrayList<Workout> workout) {
+        this.workout = workout;
+    }
 
 }

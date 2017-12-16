@@ -48,7 +48,7 @@
             android:layout_height="40dp"
             android:layout_width="40dp"
             android:textColor="@color/colorAlternateText"
-            android:onClick="repTestToast"
+            android:onClick="repSetter"
             android:background="@drawable/circle_button"
             app:layout_constraintLeft_toRightOf="@id/setRepsLbl"/>
         <TextView
@@ -92,7 +92,7 @@
             android:layout_width="40dp"
             android:textColor="@color/colorAlternateText"
             android:text="@string/DONE"
-            android:onClick="testToast"
+            android:onClick="setComplete"
             android:background="@drawable/circle_button"
             android:layout_margin="10dp"
             app:layout_constraintRight_toRightOf="parent"/>

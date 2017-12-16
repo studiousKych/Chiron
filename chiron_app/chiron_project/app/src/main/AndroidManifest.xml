@@ -30,7 +30,8 @@
         <activity
             android:name=".MealViewActivity"
             android:label="@string/title_activity_meal_view"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name=".models.ProgramActivity"></activity>
     </application>
 
 </manifest>

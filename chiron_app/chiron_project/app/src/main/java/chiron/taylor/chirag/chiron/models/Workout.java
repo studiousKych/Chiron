@@ -19,6 +19,8 @@ public class Workout{
 
     public void setId(long id) { this.id = id; }
 
+    public void setSets(ArrayList<SetModel> sets) { this.sets = sets; }
+
     public long getId() { return this.id = id; }
 
     public String getDay() { return this.day; }

@@ -18,14 +18,18 @@ import org.w3c.dom.Text;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.ObjectInputStream;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Set;
 
 import chiron.taylor.chirag.chiron.models.Program;
 import chiron.taylor.chirag.chiron.models.ProgramHelper;
 import chiron.taylor.chirag.chiron.models.SetHelper;
+import chiron.taylor.chirag.chiron.models.SetHistoryHelper;
 import chiron.taylor.chirag.chiron.models.SetModel;
 import chiron.taylor.chirag.chiron.models.Workout;
 import chiron.taylor.chirag.chiron.models.WorkoutHelper;
+import chiron.taylor.chirag.chiron.models.WorkoutHistoryHelper;
 
 public class WorkoutActivity extends AppCompatActivity {
 
@@ -33,10 +37,18 @@ public class WorkoutActivity extends AppCompatActivity {
     SetAdapter adapter;
     public WorkoutActivity SetListView = null;
     public ArrayList<SetModel> SetListViewValuesArr = new ArrayList<>();
+    public ArrayList<SetModel> FinishedSetListArr = new ArrayList<>();
 
     ProgramHelper programHelper;
     WorkoutHelper workoutHelper;
     SetHelper setHelper;
+
+    WorkoutHistoryHelper workoutHistoryHelper;
+    SetHistoryHelper setHistoryHelper;
+
+    long pid;
+    long wid;
+    Workout workout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,11 +56,15 @@ public class WorkoutActivity extends AppCompatActivity {
         setContentView(R.layout.activity_workout);
 
         Intent intent = getIntent();
+        wid = intent.getLongExtra("wid", 0);
 
         SetListView = this;
         programHelper = new ProgramHelper(this);
         workoutHelper = new WorkoutHelper(this);
         setHelper = new SetHelper(this);
+
+        workoutHistoryHelper = new WorkoutHistoryHelper(this);
+        setHistoryHelper = new SetHistoryHelper(this);
 
         SetData();
 
@@ -60,48 +76,56 @@ public class WorkoutActivity extends AppCompatActivity {
     }
 
     public void SetData() {
-        for (int i = 0; i<4; i++) {
-            SetModel set = new SetModel("Bench Press", 225, 10, 60, "https://youtu.be/tuwHzzPdaGc", i);
-            SetListViewValuesArr.add(set);
-        }
-        for (int i = 4; i<8; i++) {
-            SetModel set = new SetModel("Military Press", 175, 10, 60, "https://youtu.be/j7ULT6dznNc", i);
-            SetListViewValuesArr.add(set);
-        }
-        for (int i = 8; i<11; i++) {
-            SetModel set = new SetModel("DB Bicep Curls", 60, 10, 60, "https://youtu.be/tuwHzzPdaGc", i);
-            SetListViewValuesArr.add(set);
-        }
-        for (int i = 11; i<14; i++) {
-            SetModel set = new SetModel("Tricep Extensions", 70, 10, 60, "https://youtu.be/tuwHzzPdaGc", i);
-            SetListViewValuesArr.add(set);
-        }
+        workout = workoutHelper.getWorkout(wid);
+        ArrayList<SetModel> sets = (ArrayList<SetModel>) setHelper.getSets(wid);
+        SetListViewValuesArr = sets;
     }
 
     public void onItemClick(int mPosition) {
 
         SetModel set = (SetModel) SetListViewValuesArr.get(mPosition);
-
         startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(set.getUrl())));;
 
     }
 
-    public void testToast(View view) {
+    public void setComplete(View view) {
 
         if (SetListViewValuesArr.size() > 1) {
             int position = ((int) view.getTag());
+            SetModel finishedSet = SetListViewValuesArr.get(position);
             SetListViewValuesArr.remove(position);
             adapter.notifyDataSetChanged();
-            Toast.makeText(SetListView, "SUCCESS", Toast.LENGTH_LONG).show();
             // Save to Historical
+            View parentView = (View) view.getParent();
+            TextView loadText = (TextView) parentView.findViewById(R.id.setLoad);
+            Button repButton = (Button) parentView.findViewById(R.id.setReps);
+            finishedSet.setLoad(Integer.parseInt(loadText.getText().toString()));
+            finishedSet.setReps(Integer.parseInt(repButton.getText().toString()));
+            FinishedSetListArr.add(finishedSet);
+            setHelper.deleteSet(position);
         }
         else {
-            // WOOOOOOOOOOOOOOOOOOOO
+            int position = ((int) view.getTag());
+            SetModel finishedSet = SetListViewValuesArr.get(position);
+            // Save to Historical
+            View parentView = (View) view.getParent();
+            TextView loadText = (TextView) parentView.findViewById(R.id.setLoad);
+            Button repButton = (Button) parentView.findViewById(R.id.setReps);
+            finishedSet.setLoad(Integer.parseInt(loadText.getText().toString()));
+            finishedSet.setReps(Integer.parseInt(repButton.getText().toString()));
+            FinishedSetListArr.add(finishedSet);
+
+            long hwid = workoutHistoryHelper.createWorkout(pid, workout);
+            workoutHelper.deleteWorkout(wid);
+            for (SetModel s : FinishedSetListArr) {
+                setHistoryHelper.createSet(hwid, s);
+            }
+            finish();
         }
 
     }
 
-    public void repTestToast(View view) {
+    public void repSetter(View view) {
 
         int position = ((int) view.getTag());
         int rep = SetListViewValuesArr.get(position).getReps();
@@ -130,19 +154,6 @@ public class WorkoutActivity extends AppCompatActivity {
         TextView loadText = (TextView) parentView.findViewById(R.id.setLoad);
         int loadVal = Integer.parseInt(loadText.getText().toString())-5;
         loadText.setText(Integer.toString(loadVal));
-    }
-
-    public Program loadSerializedObject(File f) {
-        try
-        {
-            ObjectInputStream ois = new ObjectInputStream(new FileInputStream(f));
-            Program p = (Program) ois.readObject();
-            return p;
-        } catch (Exception e) {
-            Log.wtf("Serializtion Read Error: ",e.getMessage());
-            e.printStackTrace();
-        }
-        return null;
     }
 }
 

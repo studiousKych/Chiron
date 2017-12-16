@@ -9,7 +9,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SetHelper extends SQLiteOpenHelper{
+public class SetHistoryHelper extends SQLiteOpenHelper{
 
     static final int DATABASE_VERSION = 1;
 
@@ -29,7 +29,7 @@ public class SetHelper extends SQLiteOpenHelper{
 
     static final String DROP_STATEMENT = "DROP TABLE sets";
 
-    public SetHelper(Context context) { super(context, TABLE, null, DATABASE_VERSION); }
+    public SetHistoryHelper(Context context) { super(context, TABLE, null, DATABASE_VERSION); }
 
     @Override
     public void onCreate(SQLiteDatabase db) {
@@ -102,10 +102,10 @@ public class SetHelper extends SQLiteOpenHelper{
 
     }
 
-    public boolean deleteSet(int order) {
+    public boolean deleteSet(int id) {
         SQLiteDatabase db = this.getWritableDatabase();
 
-        int numRows = db.delete(TABLE, "set_order = ?", new String[] { "" + order });
+        int numRows = db.delete(TABLE, "_id = ?", new String[] { "" + id });
 
         return (numRows == 1);
     }

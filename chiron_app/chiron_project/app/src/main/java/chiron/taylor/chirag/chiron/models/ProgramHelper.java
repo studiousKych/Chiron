@@ -5,6 +5,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 import android.widget.ArrayAdapter;
 
 import java.util.ArrayList;
@@ -54,11 +55,15 @@ public class ProgramHelper extends SQLiteOpenHelper {
 
         long id = db.insert(TABLE, null, newValues);
 
+        Log.wtf("Program Made:", Long.toString(id));
+
         return id;
     }
 
     public Program getProgram(long id) {
         Program program = null;
+
+        Log.wtf("getProgram", "running");
 
         SQLiteDatabase db = this.getReadableDatabase();
         String[] columns = new String[] {"_id", "name"};
@@ -70,6 +75,7 @@ public class ProgramHelper extends SQLiteOpenHelper {
             cursor.moveToFirst();
 
             String name = cursor.getString(1);
+            Log.wtf("Program: ", name);
 
             program = new Program(id, name);
         }

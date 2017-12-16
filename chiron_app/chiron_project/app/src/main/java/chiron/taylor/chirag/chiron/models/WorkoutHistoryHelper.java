@@ -10,15 +10,14 @@ import android.util.Log;
 import java.util.ArrayList;
 import java.util.List;
 
-
-public class WorkoutHelper extends SQLiteOpenHelper {
+public class WorkoutHistoryHelper extends SQLiteOpenHelper {
     Context context;
 
     static final int DATABASE_VERSION = 1;
 
-    static final String TABLE = "workouts";
+    static final String TABLE = "workoutHistorical";
 
-    static final String CREATE_STATEMENT = "CREATE TABLE workouts (" +
+    static final String CREATE_STATEMENT = "CREATE TABLE workoutHistorical (" +
             "   _id integer primary key autoincrement," +
             "   day text not null," +
             "   name text not null," +
@@ -26,9 +25,9 @@ public class WorkoutHelper extends SQLiteOpenHelper {
             "   FOREIGN KEY(pid) REFERENCES program(_id)" +
             ")";
 
-    static final String DROP_STATEMENT = "DROP TABLE workouts";
+    static final String DROP_STATEMENT = "DROP TABLE workoutHistorical";
 
-    public WorkoutHelper(Context context) {
+    public WorkoutHistoryHelper(Context context) {
         super(context, TABLE, null, DATABASE_VERSION);
     }
 
@@ -58,30 +57,6 @@ public class WorkoutHelper extends SQLiteOpenHelper {
         long id = db.insert(TABLE, null, newValues);
 
         return id;
-    }
-
-    public Workout getWorkout(long id) {
-        Workout workout = null;
-
-        SQLiteDatabase db = this.getReadableDatabase();
-        String[] columns = new String[] {"day", "name"};
-        String where = "_id = ?";
-        String[] whereArgs = new String[] { "" + id };
-        Cursor cursor = db.query(TABLE, columns, where, whereArgs, "", "", "");
-
-        if (cursor.getCount() >= 1) {
-            cursor.moveToFirst();
-
-            String day = cursor.getString(0);
-            String name = cursor.getString(1);
-
-            Log.wtf("Workout: ", Long.toString(id));
-
-            workout = new Workout(day, name);
-            workout.setId(id);
-        }
-
-        return workout;
     }
 
     public List<Workout> getWorkouts(long pid) {
@@ -114,9 +89,10 @@ public class WorkoutHelper extends SQLiteOpenHelper {
         return workouts;
     }
 
-    public void deleteWorkout(long id) {
+    public void deleteWorkout(int id) {
         SQLiteDatabase db = this.getWritableDatabase();
 
-        db.delete(TABLE, "_id = ?", new String[] { "" + id });
+        db.delete(TABLE, "id = ?", new String[] { "" + id });
     }
 }
+
