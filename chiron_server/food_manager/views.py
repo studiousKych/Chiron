@@ -10,9 +10,9 @@ class DietProfileView(generics.RetrieveAPIView):
 
 
     serializer_class = DietProfileSerializer
-    permission_classes = (permissions.IsAuthenticated, IsUser)
+    # permission_classes = (permissions.IsAuthenticated, IsUser)
 
     def get_object(self):
         user = self.request.user
 
-        return DietProfile.objects.get(user=user)
+        return DietProfile.objects.first()

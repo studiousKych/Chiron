@@ -6,6 +6,7 @@ from .models import DietProfile
 
 
 class DietProfileSerializer(serializers.ModelSerializer):
+
     class Meta:
         model = DietProfile
         fields = ('name', 'data_type', 'staged_meals')

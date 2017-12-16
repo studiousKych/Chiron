@@ -7,7 +7,7 @@ from .permissions import IsUser
 class WorkoutProfileView(generics.RetrieveAPIView):
 
 	serializer_class = WorkoutProfileSerializer
-	permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
+	# permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
 
 	def get_object(self):
 		user = self.request.user
