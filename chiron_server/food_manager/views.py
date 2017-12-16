@@ -10,7 +10,7 @@ class DietProfileView(generics.RetrieveAPIView):
 
 
     serializer_class = DietProfileSerializer
-    # permission_classes = (permissions.IsAuthenticated, IsUser)
+    permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
 
     def get_object(self):
         user = self.request.user
